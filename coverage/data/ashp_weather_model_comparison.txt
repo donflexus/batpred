@@ -1,0 +1,36 @@
+ASHP weather model comparison
+Source file: C:\Users\Felix\VS COde\test\batpred\coverage\data\ashp_weather_hourly_model.csv
+Rows used (complete cases): 14234
+
+1) linear temp only
+  Formula: ashp_kwh ~ 1 + temperature_2m
+  Coefficients: 0.933481, -0.0677969
+  RMSE: 0.4493
+  R^2: 0.4180
+
+2) linear temp + wind + solar
+  Formula: ashp_kwh ~ 1 + temperature_2m + wind_speed_10m + shortwave_radiation
+  Coefficients: 0.866441, -0.0711671, 0.0047039, 0.000154475
+  RMSE: 0.4471
+  R^2: 0.4236
+
+3) heating-degree style
+  Formula: ashp_kwh ~ 1 + max(0, 12 - temperature_2m)
+  Base temperature: 12 C
+  Coefficients: -0.0218011, 0.0862092
+  RMSE: 0.4296
+  R^2: 0.4677
+
+4) heating-degree + wind + solar
+  Formula: ashp_kwh ~ 1 + max(0, 12 - temperature_2m) + wind_speed_10m + shortwave_radiation
+  Base temperature: 12 C
+  Coefficients: -0.0959757, 0.086642, 0.004693, -2.11837e-05
+  RMSE: 0.4281
+  R^2: 0.4714
+
+Best model by RMSE: 4) heating-degree + wind + solar (ashp_kwh ~ 1 + max(0, 12 - temperature_2m) + wind_speed_10m + shortwave_radiation)
+Best model base temperature: 12 C
+Wind/solar improvement vs temp-only: RMSE change 0.48% ; R^2 change 0.0056
+Wind/solar improvement vs heating-degree only: RMSE change 0.34% ; R^2 change 0.0037
+Material improvement call uses a simple exploratory threshold: >5% RMSE reduction or >0.02 R^2 gain.
+Do wind/solar materially improve fit? No

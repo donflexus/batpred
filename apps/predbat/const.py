@@ -126,6 +126,8 @@ DEBUG_SCHEMA_VERSION = 1
 # Create an array of times in the day in 5-minute intervals
 BASE_TIME = datetime.strptime("00:00:00", "%H:%M:%S")
 OPTIONS_TIME = [((BASE_TIME + timedelta(seconds=minute * 60)).strftime("%H:%M:%S")) for minute in range(0, 24 * 60, 5)]
+# Create an array of times in the day in 30-minute intervals
+OPTIONS_TIME_HALF_HOUR = [((BASE_TIME + timedelta(seconds=minute * 60)).strftime("%H:%M")) for minute in range(0, 24 * 60, 30)]
 
 # Inverter modes
 PREDBAT_MODE_OPTIONS = ["Monitor", "Control SOC only", "Control charge", "Control charge & discharge"]

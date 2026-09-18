@@ -1,0 +1,18 @@
+﻿ASHP History Corrected Analysis
+Generated UTC: 2026-05-15T21:42:07.0517974Z
+
+Total rows: 61007
+Unique entity_id count: 1
+Numeric state rows: 60994 (99.98%)
+
+Top entities by row count:
+  - sensor.panasonic_heat_pump_s0_watthourtotal_1: 61007
+
+Primary entity: sensor.panasonic_heat_pump_s0_watthourtotal_1 (61007 rows)
+Primary start UTC: 2024-03-28T14:00:00.0000000Z
+Primary end UTC: 2026-05-14T22:58:35.0870000Z
+Interval quantiles (minutes): p10=0.083, p50=0.084, p90=60
+Interval bins: <=1m=44025, 1-10m=2982, 10-70m=13991, >70m=8
+Delta pattern among numeric rows: +=60976, -=0, no-change=17 (likely cumulative-like)
+Reset events (delta < -0.5): 0
+Recommendation: Cadence is dense; use 15-minute resampling, then aggregate to hourly for robust modeling.

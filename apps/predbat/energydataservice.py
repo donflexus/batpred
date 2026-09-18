@@ -42,6 +42,10 @@ class Energidataservice:
             else:
                 self.log(f"Warn: No Energi Data Service data in sensor {entity_id} attribute 'raw_tomorrow'")
 
+            data_import_day_after = self.get_state_wrapper(entity_id=entity_id, attribute="raw_day_after_tomorrow")
+            if data_import_day_after:
+                data_all += data_import_day_after
+
             tariffs = self.get_state_wrapper(entity_id=entity_id, attribute="tariffs") or {}
 
         if data_all:

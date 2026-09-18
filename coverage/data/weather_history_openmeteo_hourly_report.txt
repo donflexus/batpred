@@ -1,0 +1,12 @@
+﻿Open-Meteo hourly weather history report
+Latitude: 55.55047647385018
+Longitude: 12.20331413123601
+Date range: 2024-03-28 to 2026-05-14 inclusive
+Timezone: UTC
+Row count: 18672
+First timestamp: 2024-03-28T00:00
+Last timestamp: 2026-05-14T23:00
+Missing values per field:
+- temperature_2m: 28
+- wind_speed_10m: 
+- shortwave_radiation: 8627

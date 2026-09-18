@@ -1644,7 +1644,8 @@ class Fetch:
         try:
             relative_time = datetime.strptime(relative_time, TIME_FORMAT)
         except (ValueError, TypeError):
-            self.log(f"Warn: Unable to parse relative_time from PV forecast sensor: {relative_time}, using midnight UTC as fallback")
+            if relative_time is not None:
+                self.log(f"Warn: Unable to parse relative_time from PV forecast sensor: {relative_time}, using midnight UTC as fallback")
             relative_time = self.midnight_utc
 
         # Convert keys to integers and values to floats
@@ -2560,7 +2561,7 @@ class Fetch:
         self.car_charging_now = [False for c in range(self.num_cars)]
         self.car_charging_plan_smart = [False for c in range(self.num_cars)]
         self.car_charging_plan_max_price = [0 for c in range(self.num_cars)]
-        self.car_charging_plan_time = ["07:00:00" for c in range(self.num_cars)]
+        self.car_charging_plan_time = ["07:00" for c in range(self.num_cars)]
         self.car_charging_battery_size = [100.0 for c in range(self.num_cars)]
         self.car_charging_limit = [100.0 for c in range(self.num_cars)]
         self.car_charging_rate = [7.4 for c in range(max(self.num_cars, 1))]
@@ -2598,9 +2599,9 @@ class Fetch:
             # Other car related configuration
             self.car_charging_plan_smart[car_n] = self.get_arg("car_charging_plan_smart", False)
             self.car_charging_plan_max_price[car_n] = self.get_arg("car_charging_plan_max_price", 0.0)
-            self.car_charging_plan_time[car_n] = self.get_arg("car_charging_plan_time", "07:00:00")
-            self.car_charging_battery_size[car_n] = dp2(float(self.get_arg("car_charging_battery_size", 100.0, index=car_n)))
             car_postfix = "" if car_n == 0 else "_" + str(car_n)
+            self.car_charging_plan_time[car_n] = self.get_arg("car_charging_plan_time" + car_postfix, "07:00")
+            self.car_charging_battery_size[car_n] = dp2(float(self.get_arg("car_charging_battery_size", 100.0, index=car_n)))
             self.car_charging_rate[car_n] = float(self.get_arg("car_charging_rate" + car_postfix))
             self.car_charging_limit[car_n] = dp3((float(self.get_arg("car_charging_limit", 100.0, index=car_n)) * self.car_charging_battery_size[car_n]) / 100.0)
             self.car_charging_exclusive[car_n] = self.get_arg("car_charging_exclusive", False, index=car_n)

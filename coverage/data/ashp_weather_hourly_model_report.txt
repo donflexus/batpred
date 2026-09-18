@@ -1,0 +1,11 @@
+total joined rows: 14234
+overlap start: 2024-03-28T14:00:00Z
+overlap end: 2026-05-14T22:00:00Z
+missing weather row count: 0
+ashp_kwh min: 0.000000
+ashp_kwh max: 7.609000
+ashp_kwh mean: 0.440330
+pearson correlation with temperature_2m: -0.646513
+pearson correlation with wind_speed_10m: -0.011154
+pearson correlation with shortwave_radiation: -0.292483
+quick interpretation: Weather features look promising; temperature_2m has the strongest strong negative linear relationship with ASHP usage.

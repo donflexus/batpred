@@ -549,7 +549,7 @@ class MockConfigProvider:
             "car_charging_battery_size_1": 100.0,
             "car_charging_limit_0": 100.0,
             "car_charging_limit_1": 100.0,
-            "car_charging_plan_time_0": "07:00:00",
+            "car_charging_plan_time": "07:00:00",
             "car_charging_plan_time_1": "07:00:00",
             "car_charging_plan_smart_0": False,
             "car_charging_plan_smart_1": False,

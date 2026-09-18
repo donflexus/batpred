@@ -1,0 +1,24 @@
+﻿ASHP HISTORY DEEP ANALYSIS
+Generated: 2026-05-15 23:34:04
+
+1) Unique entity_id count and top 20 entities by row count
+Unique entity_id count: 61007
+
+2) For each top-20 entity: numeric parse %, min/max/mean
+
+3) Most frequent entity with >=95% numeric state
+Selected entity: sensor.panasonic_heat_pump_s0_watthourtotal_1
+Date range: 03/28/2024 15:00:00 -> 05/15/2026 00:58:35
+Median interval minutes: 0.0835666666666667
+State p5/p50/p95: 549.05005, 6227.7705, 6262.33635
+Non-positive values (<=0): 0
+Spike count |delta| > 3*std(delta): 2224
+
+4) Cumulative vs interval-like check
+Monotonic increase ratio: 0.99996720236143
+Negative-step ratio: 3.2797638570023E-05
+Interpretation: cumulative-like
+
+5) Best entity_id candidate for ASHP consumption modeling
+Candidate entity_id: 
+Why: highest reliable coverage among top entities (rows=, numeric%=0) ; series appears cumulative-like.

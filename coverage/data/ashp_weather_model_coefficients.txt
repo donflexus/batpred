@@ -1,0 +1,7 @@
+intercept=-0.095976
+hdd_base_12c=0.086642
+wind_speed_10m=0.004693
+shortwave_radiation=-0.000021
+predicted_min_train=-0.108116
+predicted_max_train=1.987909
+rows_used=14234

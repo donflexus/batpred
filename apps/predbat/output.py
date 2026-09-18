@@ -655,8 +655,11 @@ class Output:
             html += "<th><b>Load kWh</b></th>"
         if plan_debug and self.load_forecast:
             html += "<th><b>XLoad kWh</b></th>"
-        if self.num_cars > 0:
+        if self.num_cars == 1:
             html += "<th><b>Car kWh</b></th>"
+        elif self.num_cars > 1:
+            for car_n in range(self.num_cars):
+                html += "<th><b>Car {} kWh</b></th>".format(car_n)
         if self.iboost_enable:
             html += "<th><b>iBoost kWh</b></th>"
         html += "<th><b>SoC %</b></th>"
@@ -1127,7 +1130,7 @@ class Output:
         pv_total = 0
         load_total = 0
         xload_total = 0
-        car_total = 0
+        car_totals = [0.0 for _ in range(self.num_cars)]
         raw_plan = {}
         raw_plan["rows"] = []
 
@@ -1603,14 +1606,14 @@ class Output:
             # Car charging?
             car_rate = None
             if self.num_cars > 0:
-                car_charging_kwh = self.car_charge_slot_kwh(minute_start, minute_end)
-                car_total += car_charging_kwh
-                if car_charging_kwh > 0.0:
-                    car_charging_str = str(car_charging_kwh)
+                car_kwh_per_car = self.car_charge_slot_kwh_per_car(minute_start, minute_end)
+                for car_n in range(self.num_cars):
+                    car_totals[car_n] += car_kwh_per_car[car_n]
+                car_charging_total = sum(car_kwh_per_car)
+                if car_charging_total > 0.0:
                     car_color = "FFFF00"
                     car_rate = self.car_charge_slot_rate(minute_start, minute_end)
                 else:
-                    car_charging_str = "&#9866;"
                     car_color = "#FFFFFF"
 
             # The car's own rate can diverge from the general household rate once its IOG dispatch
@@ -1724,8 +1727,14 @@ class Output:
                 html += "<td id=clip bgcolor=" + clipped_color + ">" + clipped_str + "</td>"
             if plan_debug and self.load_forecast:
                 html += "<td id=extra bgcolor=" + extra_color + ">" + str(extra_forecast) + "</td>"
-            if self.num_cars > 0:  # Don't display car charging data if there's no car
-                html += "<td id=car bgcolor=" + car_color + ">" + car_charging_str + "</td>"
+            if self.num_cars == 1:  # Don't display car charging data if there's no car
+                car_str = str(car_kwh_per_car[0]) if car_kwh_per_car[0] > 0.0 else "&#9866;"
+                html += "<td id=car bgcolor=" + car_color + ">" + car_str + "</td>"
+            elif self.num_cars > 1:
+                for car_n in range(self.num_cars):
+                    per_color = "FFFF00" if car_kwh_per_car[car_n] > 0.0 else "#FFFFFF"
+                    per_str = str(car_kwh_per_car[car_n]) if car_kwh_per_car[car_n] > 0.0 else "&#9866;"
+                    html += "<td id=car{} bgcolor={}>" .format(car_n, per_color) + per_str + "</td>"
             if self.iboost_enable:
                 html += "<td bgcolor=" + iboost_color + ">" + iboost_amount_str + " </td>"
             html += "<td id=soc data-minute=" + str(minute) + " bgcolor=" + soc_color + ">" + str(soc_percent) + soc_sym + "</td>"
@@ -1809,11 +1818,13 @@ class Output:
                 json_row["extra_load_total"] = dp2(raw_extra_forecast_total)
                 json_row["extra_color"] = extra_color
             if self.num_cars > 0:
-                json_row["car_charging"] = car_charging_kwh
+                json_row["car_charging"] = sum(car_kwh_per_car)
                 json_row["car_color"] = car_color
                 json_row["car_rate"] = car_rate
                 json_row["car_rate_color"] = car_rate_color if rate_split else None
                 json_row["rate_split"] = rate_split
+                for car_n in range(self.num_cars):
+                    json_row["car_charging_{}".format(car_n)] = car_kwh_per_car[car_n]
             if self.iboost_enable:
                 json_row["iboost"] = iboost_amount
                 json_row["iboost_change"] = iboost_change
@@ -1851,8 +1862,11 @@ class Output:
             html += "<td bgcolor=#FFFFFF><b>{}</b></td>".format(dp2(clipped_amount_end))
         if plan_debug and self.load_forecast:
             html += "<td bgcolor=#FFFFFF><b>{}</b></td>".format(dp2(xload_total))
-        if self.num_cars > 0:
-            html += "<td bgcolor=#FFFFFF><b>{}</b></td>".format(dp2(car_total))
+        if self.num_cars == 1:
+            html += "<td bgcolor=#FFFFFF><b>{}</b></td>".format(dp2(car_totals[0]))
+        elif self.num_cars > 1:
+            for car_n in range(self.num_cars):
+                html += "<td bgcolor=#FFFFFF><b>{}</b></td>".format(dp2(car_totals[car_n]))
         if self.iboost_enable:
             iboost_amount_str = "&#9866;"
             iboost_amount_end = self.predict_iboost_best.get(minute_relative_slot_end, 0)
@@ -1879,7 +1893,9 @@ class Output:
         if self.load_forecast:
             totals["extra_load"] = dp2(xload_total)
         if self.num_cars > 0:
-            totals["car_charging"] = dp2(car_total)
+            totals["car_charging"] = dp2(sum(car_totals))
+            for car_n in range(self.num_cars):
+                totals["car_charging_{}".format(car_n)] = dp2(car_totals[car_n])
         totals["soc_percent"] = soc_percent_end
         if self.iboost_enable:
             totals["iboost"] = dp2(iboost_amount_end)

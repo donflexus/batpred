@@ -19,7 +19,7 @@ and calculation options.
 """
 
 from predbat import THIS_VERSION
-from const import OPTIONS_TIME, PREDBAT_MODE_OPTIONS, PREDBAT_MODE_CONTROL_CHARGEDISCHARGE
+from const import OPTIONS_TIME, OPTIONS_TIME_HALF_HOUR, PREDBAT_MODE_OPTIONS, PREDBAT_MODE_CONTROL_CHARGEDISCHARGE
 
 # Predbat update options
 PREDBAT_UPDATE_OPTIONS = [f"{THIS_VERSION} Loading..."]
@@ -27,17 +27,6 @@ PREDBAT_SAVE_RESTORE = ["save current", "restore default"]
 
 # Configuration options inside HA
 CONFIG_ITEMS = [
-    {
-        "name": "version",
-        "friendly_name": "Predbat Core Update",
-        "type": "update",
-        "title": "Predbat",
-        "installed_version": THIS_VERSION,
-        "release_url": f"https://github.com/springfall2008/batpred/releases/tag/{THIS_VERSION}",
-        "entity_picture": "https://user-images.githubusercontent.com/48591903/249456079-e98a0720-d2cf-4b71-94ab-97fe09b3cee1.png",
-        "restore": False,
-        "default": False,
-    },
     {
         "name": "expert_mode",
         "friendly_name": "Expert Mode",
@@ -1272,13 +1261,43 @@ CONFIG_ITEMS = [
     },
     {
         "name": "car_charging_plan_time",
-        "friendly_name": "Car charging planned ready time",
+        "friendly_name": "Car charging planned ready time (Car 0)",
         "type": "select",
-        "options": OPTIONS_TIME,
+        "options": OPTIONS_TIME_HALF_HOUR,
         "icon": "mdi:clock-end",
-        "default": "07:00:00",
+        "default": "07:00",
         "enable": "num_cars",
         "enable_condition": "num_cars > 0",
+    },
+    {
+        "name": "car_charging_plan_time_1",
+        "friendly_name": "Car charging planned ready time (Car 1)",
+        "type": "select",
+        "options": OPTIONS_TIME_HALF_HOUR,
+        "icon": "mdi:clock-end",
+        "default": "07:00",
+        "enable": "num_cars",
+        "enable_condition": "num_cars > 1",
+    },
+    {
+        "name": "car_charging_plan_time_2",
+        "friendly_name": "Car charging planned ready time (Car 2)",
+        "type": "select",
+        "options": OPTIONS_TIME_HALF_HOUR,
+        "icon": "mdi:clock-end",
+        "default": "07:00",
+        "enable": "num_cars",
+        "enable_condition": "num_cars > 2",
+    },
+    {
+        "name": "car_charging_plan_time_3",
+        "friendly_name": "Car charging planned ready time (Car 3)",
+        "type": "select",
+        "options": OPTIONS_TIME_HALF_HOUR,
+        "icon": "mdi:clock-end",
+        "default": "07:00",
+        "enable": "num_cars",
+        "enable_condition": "num_cars > 3",
     },
     {
         "name": "mode",
@@ -2590,6 +2609,20 @@ APPS_SCHEMA = {
         "type": "sensor_list",
         "sensor_type": "dict|list",
     },
+    "ashp_forecast_enable": {"type": "boolean"},
+    "ashp_forecast_entity_id": {"type": "string", "empty": False},
+    "ashp_forecast_latitude": {"type": "float"},
+    "ashp_forecast_longitude": {"type": "float"},
+    "ashp_forecast_update_every": {"type": "integer", "zero": False},
+    "ashp_forecast_days": {"type": "integer", "zero": False},
+    "ashp_forecast_http_timeout": {"type": "integer", "zero": False},
+    "ashp_forecast_base_temperature": {"type": "float"},
+    "ashp_forecast_intercept_kwh": {"type": "float"},
+    "ashp_forecast_hdd_slope_kwh_per_deg": {"type": "float"},
+    "ashp_forecast_wind_slope_kwh_per_ms": {"type": "float"},
+    "ashp_forecast_solar_slope_kwh_per_wm2": {"type": "float"},
+    "ashp_forecast_min_kwh": {"type": "float"},
+    "ashp_forecast_max_kwh": {"type": "float"},
     "ge_cloud_data": {"type": "boolean"},
     "ge_cloud_serial": {"type": "string", "empty": False},
     "ge_cloud_key": {"type": "string", "empty": False},

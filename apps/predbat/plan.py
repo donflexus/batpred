@@ -5390,10 +5390,16 @@ class Plan:
         else:
             price_sorted = [n for n in range(len(low_rates))]
 
-        try:
-            ready_time = datetime.strptime(self.car_charging_plan_time[car_n], "%H:%M:%S")
-        except (ValueError, TypeError):
-            ready_time = datetime.strptime("07:00:00", "%H:%M:%S")
+        ready_time = None
+        for time_format in ["%H:%M", "%H:%M:%S"]:
+            try:
+                ready_time = datetime.strptime(self.car_charging_plan_time[car_n], time_format)
+                break
+            except (ValueError, TypeError):
+                continue
+
+        if not ready_time:
+            ready_time = datetime.strptime("07:00", "%H:%M")
             self.log("Warn: Car charging plan time for car {} is invalid".format(car_n))
 
         ready_minutes = ready_time.hour * 60 + ready_time.minute
@@ -5530,6 +5536,26 @@ class Plan:
         if total_kwh > 0.0001:
             return dp2(total_cost / total_kwh)
         return None
+
+    def car_charge_slot_kwh_per_car(self, minute_start, minute_end):
+        """
+        Work out car charging amount in KWh for given slot, returned as a list per car
+        """
+        result = []
+        for car_n in range(self.num_cars):
+            car_kwh = 0.0
+            for window in self.car_charging_slots[car_n]:
+                start = window["start"]
+                end = window["end"]
+                if start < minute_end and end > minute_start:
+                    kwh = 0
+                    if end != start:
+                        kwh = dp2(window["kwh"]) / (end - start)
+                    for minute_offset in range(minute_start, minute_end, PREDICT_STEP):
+                        if minute_offset >= start and minute_offset < end:
+                            car_kwh += kwh * PREDICT_STEP
+            result.append(dp2(car_kwh))
+        return result
 
     def hit_car_window(self, window_start, window_end, cache=None):
         """Does this window intersect a car charging window?

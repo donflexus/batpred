@@ -1,0 +1,17 @@
+﻿Source exists: True
+Source: c:\Users\Felix\Downloads\history.csv
+Copied to: c:\Users\Felix\VS COde\test\batpred\coverage\data\ashp_history.csv
+Delimiter: ,
+Row count: 61007
+Columns: entity_id, state, last_changed
+Timestamp column: last_changed
+First timestamp: 2024-03-28T14:00:00.000Z
+Last timestamp: 2026-05-14T22:58:35.087Z
+Median interval minutes (first 5000 sorted rows): 60
+Timestamp parse failures: 0
+Top 10 null/blank columns:
+- last_changed: 0 (0%)
+- state: 0 (0%)
+- entity_id: 0 (0%)
+Caveats:
+- No major caveats detected by quick checks.
